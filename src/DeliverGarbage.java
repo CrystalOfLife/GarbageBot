@@ -70,7 +70,7 @@ public class DeliverGarbage implements Behavior {
 					pilot.rotate(360);
 					break;
 				default:
-					colorSensor.setFloodlight(Color.NONE);
+					colorSensor.setFloodlight(Color.WHITE);
 					break;	
 			}
 		}

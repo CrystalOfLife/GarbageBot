@@ -42,7 +42,7 @@ public class DeliverGarbage implements Behavior {
 	
 	public boolean takeControl() {
 
-		return currentDetectedColor == Color.BLUE;
+		return currentDetectedColor == Color.RED;
 	}
 	
 
@@ -53,28 +53,28 @@ public class DeliverGarbage implements Behavior {
 	public void action() {
 		suppressed = false;
 		
-		currentDetectedColor = colorSensor.getColorID();
-		while(pilot.isMoving())
+		while(Button.ESCAPE.isUp())
 		{
+			currentDetectedColor = colorSensor.getColorID();
 			switch (currentDetectedColor) 
 			{
 				case Color.RED:
 					colorSensor.setFloodlight(Color.RED);
-					pilot.rotate(360);
+					pilot.forward();
 					break;
 				case Color.GREEN:
 					colorSensor.setFloodlight(Color.GREEN);
 					break;
 				case Color.BLUE:
 					colorSensor.setFloodlight(Color.BLUE);
-					pilot.forward();
+					pilot.rotate(360);
 					break;
 				default:
-					colorSensor.setFloodlight(Color.WHITE);
+					colorSensor.setFloodlight(Color.NONE);
 					break;	
 			}
-			Delay.msDelay(2500);
 		}
+		colorSensor.close();
 		//nav.clearPath();
 	
 		

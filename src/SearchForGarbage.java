@@ -1,3 +1,6 @@
+import lejos.hardware.sensor.EV3ColorSensor;
+import lejos.robotics.Color;
+import lejos.robotics.SampleProvider;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
@@ -25,12 +28,7 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 		suppressed = false;
 		
 		pilot.setAngularSpeed(100);
-		pilot.rotate(2000);
-		
-		//nav.clearPath();
-		//nav.addWaypoint(100, 0);
-		//pilot.rotateLeft();
-		
+		pilot.rotate(5);
 		while( !suppressed )
 		{
 			Thread.yield();

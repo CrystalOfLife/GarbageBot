@@ -27,5 +27,6 @@ public class Main {
 		Arbitrator arby = new Arbitrator(bArray);
 		arby.go();
 	}
+	
 
 }

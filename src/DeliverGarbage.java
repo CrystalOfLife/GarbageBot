@@ -1,3 +1,5 @@
+import org.freedesktop.dbus.test.profile.Log;
+
 import lejos.robotics.Color;
 import lejos.hardware.Audio;
 import lejos.hardware.Sound;
@@ -22,7 +24,7 @@ public class DeliverGarbage implements Behavior {
 	private SampleProvider colorProvider;
 	private float[] colorSample;
 	EV3ColorSensor colorSensor;
-	int currentDetectedColor;
+	private int currentDetectedColor;
 
 	private MovePilot pilot;
 	private Navigator nav;
@@ -34,6 +36,8 @@ public class DeliverGarbage implements Behavior {
 		this.colorSensor = colorSensor;
 		colorProvider = colorSensor.getColorIDMode();
 		colorSample = new float[colorProvider.sampleSize()];
+		currentDetectedColor = colorSensor.getColorID();
+		colorSensor.setFloodlight(Color.WHITE);
 		
 		this.pilot = pilot;
 		nav = new Navigator(pilot);
@@ -41,8 +45,12 @@ public class DeliverGarbage implements Behavior {
 
 	
 	public boolean takeControl() {
-
-		return currentDetectedColor == Color.RED;
+		
+		currentDetectedColor = colorSensor.getColorID();
+		System.out.println(currentDetectedColor);
+		return currentDetectedColor != Color.NONE;
+		//return true;
+		
 	}
 	
 
@@ -52,12 +60,17 @@ public class DeliverGarbage implements Behavior {
 	
 	public void action() {
 		suppressed = false;
-		
-		while(Button.ESCAPE.isUp())
+		while(true)
 		{
 			currentDetectedColor = colorSensor.getColorID();
 			switch (currentDetectedColor) 
 			{
+			case Color.BLUE:
+				colorSensor.setFloodlight(Color.BLUE);
+				pilot.rotate(360);
+				Sound.setVolume(100);
+				Sound.playTone(2, 500);
+				break;
 				case Color.RED:
 					colorSensor.setFloodlight(Color.RED);
 					pilot.forward();
@@ -65,34 +78,19 @@ public class DeliverGarbage implements Behavior {
 				case Color.GREEN:
 					colorSensor.setFloodlight(Color.GREEN);
 					break;
-				case Color.BLUE:
-					colorSensor.setFloodlight(Color.BLUE);
-					pilot.rotate(360);
-					break;
 				default:
 					colorSensor.setFloodlight(Color.WHITE);
 					break;	
 			}
 		}
-		colorSensor.close();
-		//nav.clearPath();
-	
+		//colorSensor.close();
 		
-		
-		
-		
-		
-		//pilot.forward();
-		//nav.addWaypoint(0, 0);
-		//pilot.rotateLeft();
-		
-		while( !suppressed )
-		{
-			Thread.yield();
-		}
-		
-		pilot.stop();
+		//while( !suppressed && pilot.isMoving())
+		//{
+		//	Thread.yield();
+		//}
 
+		//pilot.stop();
 	}
 
 }

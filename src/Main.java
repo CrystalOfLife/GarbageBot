@@ -17,11 +17,18 @@ public class Main {
 		Chassis chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 },
 				WheeledChassis.TYPE_DIFFERENTIAL);
 		MovePilot movePilot = new MovePilot(chassis);
-
+		
+		
+		Wheel rightEngine = WheeledChassis.modelWheel(Motor.D, 55).offset(65);
+		Wheel leftEngine = WheeledChassis.modelWheel(Motor.A, 55).offset(-65);
+		Chassis grabberChassis = new WheeledChassis(new Wheel[] { rightEngine, leftEngine },
+				WheeledChassis.TYPE_DIFFERENTIAL);
+		MovePilot grabber = new MovePilot(grabberChassis);
+		
 		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
 		movePilot = new MovePilot(chassis);
 		Behavior b1 = new SearchForGarbage(movePilot);
-		Behavior b2 = new DeliverGarbage(movePilot, colorSensor);
+		Behavior b2 = new DeliverGarbage(movePilot, colorSensor, grabber);
 		Behavior b3 = new Exit();
 		Behavior[] bArray = { b1, b2, b3 };
 		Arbitrator arby = new Arbitrator(bArray);

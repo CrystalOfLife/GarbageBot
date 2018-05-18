@@ -26,13 +26,13 @@ public class DeliverGarbage implements Behavior {
 	EV3ColorSensor colorSensor;
 	private int currentDetectedColor;
 
-	private MovePilot pilot;
+	private MovePilot pilot, grabber;
 	private Navigator nav;
 	private Pose pose;
 
 	private boolean suppressed = false;
 
-	public DeliverGarbage(MovePilot pilot, EV3ColorSensor colorSensor) {
+	public DeliverGarbage(MovePilot pilot, EV3ColorSensor colorSensor, MovePilot grabber) {
 		this.colorSensor = colorSensor;
 		colorProvider = colorSensor.getColorIDMode();
 		colorSample = new float[colorProvider.sampleSize()];
@@ -40,6 +40,7 @@ public class DeliverGarbage implements Behavior {
 		colorSensor.setFloodlight(Color.WHITE);
 		
 		this.pilot = pilot;
+		this.grabber = grabber;
 		nav = new Navigator(pilot);
 	}
 
@@ -71,7 +72,15 @@ public class DeliverGarbage implements Behavior {
 					break;
 				case Color.RED:
 					colorSensor.setFloodlight(Color.RED);
-					pilot.forward();
+					currentDetectedColor = Color.NONE;
+					grabber.rotate(-52);
+					nav.goTo(750,-750);
+					while(nav.isMoving()) Thread.yield();
+					grabber.rotate(52);
+					pilot.travel(-200, true);
+					nav.goTo(0,0);
+					while(nav.isMoving()) Thread.yield();
+					currentDetectedColor = colorSensor.getColorID();
 					break;
 				case Color.GREEN:
 					colorSensor.setFloodlight(Color.GREEN);

@@ -47,10 +47,7 @@ public class DeliverGarbage implements Behavior {
 	public boolean takeControl() {
 		
 		currentDetectedColor = colorSensor.getColorID();
-		System.out.println(currentDetectedColor);
 		return currentDetectedColor != Color.NONE;
-		//return true;
-		
 	}
 	
 
@@ -60,17 +57,17 @@ public class DeliverGarbage implements Behavior {
 	
 	public void action() {
 		suppressed = false;
-		while(true)
+		while(!suppressed)
 		{
 			currentDetectedColor = colorSensor.getColorID();
 			switch (currentDetectedColor) 
 			{
-			case Color.BLUE:
-				colorSensor.setFloodlight(Color.BLUE);
-				pilot.rotate(360);
-				Sound.setVolume(100);
-				Sound.playTone(2, 500);
-				break;
+				case Color.BLUE:
+					colorSensor.setFloodlight(Color.BLUE);
+					pilot.rotate(360);
+					Sound.setVolume(100);
+					Sound.playTone(2, 500);
+					break;
 				case Color.RED:
 					colorSensor.setFloodlight(Color.RED);
 					pilot.forward();
@@ -80,17 +77,9 @@ public class DeliverGarbage implements Behavior {
 					break;
 				default:
 					colorSensor.setFloodlight(Color.WHITE);
+					suppress();
 					break;	
 			}
 		}
-		//colorSensor.close();
-		
-		//while( !suppressed && pilot.isMoving())
-		//{
-		//	Thread.yield();
-		//}
-
-		//pilot.stop();
 	}
-
 }

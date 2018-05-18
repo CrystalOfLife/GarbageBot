@@ -16,6 +16,7 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 	private Pose pose;
 	
 	public SearchForGarbage(MovePilot pilot){
+		
 		this.pilot = pilot;
 		nav = new Navigator(pilot);
 	}
@@ -26,15 +27,13 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 	
 	public void action() {
 		suppressed = false;
-		
 		pilot.setAngularSpeed(100);
-		pilot.rotate(5);
-		while( !suppressed )
+		
+		while (!suppressed)
 		{
+			pilot.rotate(5);
 			Thread.yield();
 		}
-		
-		pilot.stop();	
 	}
 	
 	public void suppress() {

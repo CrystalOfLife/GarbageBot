@@ -67,6 +67,7 @@ public class DeliverGarbage implements Behavior {
 					pilot.rotate(360);
 					Sound.setVolume(100);
 					Sound.playTone(2, 500);
+					nav.goTo(150, 200);
 					break;
 				case Color.RED:
 					colorSensor.setFloodlight(Color.RED);

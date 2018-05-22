@@ -65,25 +65,42 @@ public class DeliverGarbage implements Behavior {
 			{
 				case Color.BLUE:
 					colorSensor.setFloodlight(Color.BLUE);
-					pilot.rotate(360);
-					Sound.setVolume(100);
-					Sound.playTone(2, 500);
-					nav.goTo(150, 200);
-					break;
-				case Color.RED:
-					colorSensor.setFloodlight(Color.RED);
 					currentDetectedColor = Color.NONE;
-					grabber.rotate(-52);
-					nav.goTo(750,-750);
+					grabber.rotate(-70);
+					nav.goTo(750,-200);
 					while(nav.isMoving()) Thread.yield();
-					grabber.rotate(52);
+					grabber.rotate(70);
 					pilot.travel(-200, true);
+					while(pilot.isMoving()) Thread.yield();
 					nav.goTo(0,0);
 					while(nav.isMoving()) Thread.yield();
 					currentDetectedColor = colorSensor.getColorID();
 					break;
-				case Color.GREEN:
-					colorSensor.setFloodlight(Color.GREEN);
+				case Color.RED:
+					colorSensor.setFloodlight(Color.RED);
+					currentDetectedColor = Color.NONE;
+					grabber.rotate(-70);
+					nav.goTo(750,0);
+					while(nav.isMoving()) Thread.yield();
+					grabber.rotate(70);
+					pilot.travel(-200);
+					while(pilot.isMoving()) Thread.yield();
+					nav.goTo(0,0);
+					while(nav.isMoving()) Thread.yield();
+					currentDetectedColor = colorSensor.getColorID();
+					break;
+				case Color.WHITE:
+					colorSensor.setFloodlight(Color.WHITE);
+					currentDetectedColor = Color.NONE;
+					grabber.rotate(-70);
+					nav.goTo(750,-200);
+					while(nav.isMoving()) Thread.yield();
+					grabber.rotate(70);
+					pilot.travel(-200, true);
+					while(pilot.isMoving()) Thread.yield();
+					nav.goTo(0,0);
+					while(nav.isMoving()) Thread.yield();
+					currentDetectedColor = colorSensor.getColorID();
 					break;
 				default:
 					colorSensor.setFloodlight(Color.WHITE);

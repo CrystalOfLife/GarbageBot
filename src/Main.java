@@ -12,8 +12,8 @@ import lejos.robotics.subsumption.Behavior;
 public class Main {
 
 	public static void main(String[] args) {
-		Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 55).offset(58);
-		Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 55).offset(-58);
+		Wheel wheel1 = WheeledChassis.modelWheel(Motor.B, 55).offset(53);
+		Wheel wheel2 = WheeledChassis.modelWheel(Motor.C, 55).offset(-53);
 		Chassis chassis = new WheeledChassis(new Wheel[] { wheel1, wheel2 },
 				WheeledChassis.TYPE_DIFFERENTIAL);
 		MovePilot movePilot = new MovePilot(chassis);

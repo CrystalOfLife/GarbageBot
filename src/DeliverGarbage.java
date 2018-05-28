@@ -1,5 +1,6 @@
 import org.freedesktop.dbus.test.profile.Log;
 
+import cx.ath.matthew.debug.Debug;
 import lejos.robotics.Color;
 import lejos.hardware.Audio;
 import lejos.hardware.Sound;
@@ -11,6 +12,9 @@ import lejos.robotics.ColorAdapter;
 import lejos.robotics.ColorIdentifier;
 import lejos.robotics.RangeFinderAdapter;
 import lejos.robotics.SampleProvider;
+import lejos.robotics.localization.OdometryPoseProvider;
+import lejos.robotics.localization.PoseProvider;
+import lejos.robotics.navigation.DifferentialPilot;
 import lejos.robotics.navigation.MovePilot;
 import lejos.robotics.navigation.Navigator;
 import lejos.robotics.navigation.Pose;
@@ -26,22 +30,26 @@ public class DeliverGarbage implements Behavior {
 	EV3ColorSensor colorSensor;
 	private int currentDetectedColor;
 
-	private MovePilot pilot, grabber;
+	private MovePilot grabber;
+	private DifferentialPilot pilot;
 	private Navigator nav;
 	private Pose pose;
+	private OdometryPoseProvider poseprovider;
 
 	private boolean suppressed = false;
 
-	public DeliverGarbage(MovePilot pilot, EV3ColorSensor colorSensor, MovePilot grabber) {
+	public DeliverGarbage(DifferentialPilot pilot, EV3ColorSensor colorSensor, MovePilot grabber) {
 		this.colorSensor = colorSensor;
 		colorProvider = colorSensor.getColorIDMode();
 		colorSample = new float[colorProvider.sampleSize()];
 		currentDetectedColor = colorSensor.getColorID();
-		colorSensor.setFloodlight(Color.WHITE);
+		colorSensor.setFloodlight(Color.BLUE);
 		
 		this.pilot = pilot;
 		this.grabber = grabber;
 		nav = new Navigator(pilot);
+		poseprovider = new OdometryPoseProvider(pilot);
+		nav.setPoseProvider(poseprovider);
 	}
 
 	
@@ -64,43 +72,29 @@ public class DeliverGarbage implements Behavior {
 			switch (currentDetectedColor) 
 			{
 				case Color.BLUE:
-					colorSensor.setFloodlight(Color.BLUE);
-					currentDetectedColor = Color.NONE;
-					grabber.rotate(-70);
+					grab();
 					nav.goTo(750,-200);
-					while(nav.isMoving()) Thread.yield();
-					grabber.rotate(70);
-					pilot.travel(-200, true);
-					while(pilot.isMoving()) Thread.yield();
-					nav.goTo(0,0);
-					while(nav.isMoving()) Thread.yield();
-					currentDetectedColor = colorSensor.getColorID();
+					deliver();
 					break;
 				case Color.RED:
-					colorSensor.setFloodlight(Color.RED);
-					currentDetectedColor = Color.NONE;
-					grabber.rotate(-70);
+					grab();
 					nav.goTo(750,0);
-					while(nav.isMoving()) Thread.yield();
-					grabber.rotate(70);
-					pilot.travel(-200);
-					while(pilot.isMoving()) Thread.yield();
-					nav.goTo(0,0);
-					while(nav.isMoving()) Thread.yield();
-					currentDetectedColor = colorSensor.getColorID();
+					deliver();
 					break;
-				case Color.WHITE:
-					colorSensor.setFloodlight(Color.WHITE);
-					currentDetectedColor = Color.NONE;
-					grabber.rotate(-70);
-					nav.goTo(750,-200);
-					while(nav.isMoving()) Thread.yield();
-					grabber.rotate(70);
-					pilot.travel(-200, true);
-					while(pilot.isMoving()) Thread.yield();
-					nav.goTo(0,0);
-					while(nav.isMoving()) Thread.yield();
-					currentDetectedColor = colorSensor.getColorID();
+				case Color.YELLOW:
+					grab();
+					nav.goTo(750,200);
+					deliver();
+					break;
+				case Color.GREEN:
+					grab();
+					nav.goTo(750,-400);
+					deliver();
+					break;
+				case Color.BLACK:
+					grab();
+					nav.goTo(750,400);
+					deliver();
 					break;
 				default:
 					colorSensor.setFloodlight(Color.WHITE);
@@ -108,5 +102,23 @@ public class DeliverGarbage implements Behavior {
 					break;	
 			}
 		}
+	}
+	
+	public void grab()
+	{
+		colorSensor.setFloodlight(Color.RED);
+		currentDetectedColor = Color.NONE;
+		grabber.rotate(-70);
+	}
+	
+	public void deliver()
+	{
+		while(nav.isMoving()) Thread.yield();
+		grabber.rotate(70);
+		nav.getMoveController().travel(-200);
+		while(nav.isMoving()) Thread.yield();
+		nav.goTo(0, 0);
+		while(nav.isMoving()) Thread.yield();
+		currentDetectedColor = colorSensor.getColorID();
 	}
 }

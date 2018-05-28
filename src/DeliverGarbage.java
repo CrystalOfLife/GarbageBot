@@ -73,7 +73,7 @@ public class DeliverGarbage implements Behavior {
 			{
 				case Color.BLUE:
 					grab();
-					nav.goTo(750,-200);
+					nav.goTo(550,-600);
 					deliver();
 					break;
 				case Color.RED:
@@ -83,17 +83,17 @@ public class DeliverGarbage implements Behavior {
 					break;
 				case Color.YELLOW:
 					grab();
-					nav.goTo(750,200);
+					nav.goTo(650,-300);
 					deliver();
 					break;
 				case Color.GREEN:
 					grab();
-					nav.goTo(750,-400);
+					nav.goTo(650,300);
 					deliver();
 					break;
 				case Color.BLACK:
 					grab();
-					nav.goTo(750,400);
+					nav.goTo(550,600);
 					deliver();
 					break;
 				default:

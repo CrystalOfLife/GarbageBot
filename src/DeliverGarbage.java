@@ -85,6 +85,7 @@ public class DeliverGarbage implements Behavior {
 	{
 		colorSensor.setFloodlight(Color.RED);
 		currentDetectedColor = Color.NONE;
+		nav.getMoveController().travel(50);
 		grabber.rotate(-70);
 	}
 	

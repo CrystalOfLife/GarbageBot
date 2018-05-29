@@ -29,6 +29,7 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 	public void action() {
 		suppressed = false;
 		
+		//Rotates to look for trash and counting down to switch location
 		while (!suppressed && rotation < 72)
 		{
 			pilot.rotate(5);
@@ -36,6 +37,7 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 			Thread.yield();
 		}
 		
+		//Switches location based on where the robot is now
 		while (!suppressed && rotation == 72)
 		{
 			rotation = 0;
@@ -60,6 +62,7 @@ public class SearchForGarbage  extends java.lang.Object implements Behavior {
 		}
 	}
 	
+	//When suppressed it will reset rotation and movement to start anew when it returns
 	public void suppress() {
 		rotation = 0;
 		moved = 0;

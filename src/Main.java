@@ -13,8 +13,10 @@ public class Main {
 
 	public static void main(String[] args) {
 		
+		//Setting our pilot for moving up
 		DifferentialPilot pilot = new DifferentialPilot(55, 106, Motor.B, Motor.C);
 		
+		//Setting the pilot for our grabber up
 		Wheel rightEngine = WheeledChassis.modelWheel(Motor.D, 55).offset(65);
 		Wheel leftEngine = WheeledChassis.modelWheel(Motor.A, 55).offset(-65);
 		Chassis grabberChassis = new WheeledChassis(new Wheel[] { rightEngine, leftEngine },
@@ -22,6 +24,8 @@ public class Main {
 		MovePilot grabber = new MovePilot(grabberChassis);
 		
 		EV3ColorSensor colorSensor = new EV3ColorSensor(SensorPort.S2);
+		
+		//The hierarchy 
 		Behavior b1 = new SearchForGarbage(pilot);
 		Behavior b2 = new DeliverGarbage(pilot, colorSensor, grabber);
 		Behavior b3 = new Exit();

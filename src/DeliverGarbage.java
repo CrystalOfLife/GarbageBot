@@ -29,7 +29,7 @@ public class DeliverGarbage implements Behavior {
 		nav.setPoseProvider(poseprovider);
 	}
 
-	
+	//Takes control when a color is detected
 	public boolean takeControl() {
 		
 		currentDetectedColor = colorSensor.getColorID();
@@ -41,6 +41,7 @@ public class DeliverGarbage implements Behavior {
 		suppressed = true;
 	}
 	
+	//Decides where to place the object based on its color
 	public void action() {
 		suppressed = false;
 		while(!suppressed)
@@ -81,6 +82,7 @@ public class DeliverGarbage implements Behavior {
 		}
 	}
 	
+	//Grabs the object
 	public void grab()
 	{
 		colorSensor.setFloodlight(Color.RED);
@@ -89,6 +91,7 @@ public class DeliverGarbage implements Behavior {
 		grabber.rotate(-70);
 	}
 	
+	//Releases the object and returns
 	public void deliver()
 	{
 		while(nav.isMoving()) Thread.yield();
